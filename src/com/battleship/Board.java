@@ -12,6 +12,7 @@ class Board {
 
   String[][] board;
   String[][] boardComp;
+  String[][] board_hits;
   ArrayList<Ship> list = new ArrayList<Ship>();
   ArrayList<Ship> list2 = new ArrayList<Ship>();
   public Board() {
@@ -19,21 +20,36 @@ class Board {
     this.boardLength = 10;
     board = new String[boardWidth][boardLength];
     boardComp = new String[boardWidth][boardLength];
+    board_hits = new String[boardWidth][boardLength];
     //list = new Ship[5];
-    for(int i = 0; i < boardLength; i++) {
+    for(int i = 0; i < boardLength; ++i) {
       Arrays.fill(board[i], "0");
       Arrays.fill(boardComp[i], "0");
+      Arrays.fill(board_hits[i], "0");
     }
   }
 
   public void printBoard() {
     System.out.println("   A B C D E F G H I J");
-    for(int i = 0; i < this.boardLength; i++) {
-      for(int j = 0; j < this.boardWidth; j++) {
+    for(int i = 0; i < this.boardLength; ++i) {
+      for(int j = 0; j < this.boardWidth; ++j) {
         if(j == 0) {
           System.out.print((i + 1) + "  ");
         }
         System.out.print(board[i][j] + " ");
+      }
+      System.out.println();
+    }
+  }
+
+  public void printBoard_hits() {
+    System.out.println("   A B C D E F G H I J");
+    for(int i = 0; i < this.boardLength; ++i) {
+      for(int j = 0; j < this.boardWidth; ++j) {
+        if(j == 0) {
+          System.out.print((i + 1) + "  ");
+        }
+        System.out.print(board_hits[i][j] + " ");
       }
       System.out.println();
     }
@@ -94,7 +110,7 @@ class Board {
         }
       }
       Ship ship = new Ship(length);
-      for(int i = min; i <= max; i++) {
+      for(int i = min; i <= max; ++i) {
         board[i - 1][sCol] = "☐";
         ship.addCoord(i - 1, sCol, i - min);
       }
@@ -103,7 +119,7 @@ class Board {
     } else if(sRow == eRow && (sCol + length - 1 == eCol || eCol + length - 1 == sCol)) {
       int min = Math.min(sCol, eCol);
       int max = Math.max(sCol, eCol);
-      for(int i = min; i <= max; i++) {
+      for(int i = min; i <= max; ++i) {
         if(board[sRow - 1][i] == "☐") {
           return false;
         }
@@ -121,7 +137,7 @@ class Board {
   }
 
   public void promptComp() {
-    for(int i = 0; i < lengths.length; i++) {
+    for(int i = 0; i < lengths.length; ++i) {
       String alphabet = "ABCDEFGHIJ";
       Random ship = new Random();
       String sPos, ePos;
@@ -158,11 +174,14 @@ class Board {
       //hit
       System.out.println("You hit a ship!");
       board[sRow - 1][sCol] = "1";
+      board_hits[sRow - 1][sCol] = "1";
       shipCheck(sRow - 1, sCol, list2);
       return true;
     } else if(board[sRow - 1][sCol] == "0") {
       //miss
       System.out.println("You missed!");
+      board[sRow - 1][sCol] = "2";
+      board_hits[sRow - 1][sCol] = "2";
       return true;
     } else {
       System.out.println("You've already shot here. Try again!");
@@ -190,7 +209,7 @@ class Board {
   }
 
   public void shipCheck(int xPos, int yPos, ArrayList<Ship> ship) {
-    for(int i = 0; i < ship.size(); i++) {
+    for(int i = 0; i < ship.size(); ++i) {
       if(ship.get(i).compareShip(xPos, yPos) == true) {
         //System.out.println("A ship has been hit!");
         ship.remove(i);
@@ -200,6 +219,7 @@ class Board {
 
   public boolean playerWin() {
     if(list2.size() == 0) {
+      System.out.println("You win! Congrats!");
       return true;
     } else {
       return false;
@@ -208,6 +228,7 @@ class Board {
 
   public boolean compWin() {
     if(list.size() == 0) {
+      System.out.println("The computer wins! Better luck next time!");
       return true;
     } else {
       return false;

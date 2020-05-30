@@ -13,6 +13,7 @@ class Main {
         System.out.println("");
       }
       newGame.printBoard();
+      newGame.printBoard_hits();
     }
   }
 }

@@ -14,7 +14,7 @@ class Ship {
   }
 
   public boolean compareShip(int xPos, int yPos) {
-    for(int i = 0; i < shipLength; i++) {
+    for(int i = 0; i < shipLength; ++i) {
       if(coords[i][0] == xPos && coords[i][1] == yPos) {
         numHits++;
         if(numHits == shipLength) {
